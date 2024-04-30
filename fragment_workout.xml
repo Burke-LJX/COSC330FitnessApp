@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".ProfileFragment">
+    tools:context=".WorkoutFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -15,15 +15,12 @@
 
         <RadioGroup
             android:id="@+id/radioGroup"
-            android:layout_width="255dp"
-            android:layout_height="248dp"
+            android:layout_width="413dp"
+            android:layout_height="398dp"
             android:layout_gravity="center"
-            android:layout_marginStart="145dp"
             android:layout_marginTop="120dp"
-            android:layout_marginEnd="143dp"
             android:background="@color/light_purple"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.507"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView">
 
@@ -31,6 +28,7 @@
                 android:id="@+id/radioButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@color/white"
                 android:text="Running"
                 android:textColor="@color/black" />
@@ -39,6 +37,7 @@
                 android:id="@+id/radioButton2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@color/white"
                 android:text="Swimming" />
 
@@ -46,6 +45,7 @@
                 android:id="@+id/radioButton3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@color/white"
                 android:text="Walking" />
 
@@ -53,17 +53,10 @@
                 android:id="@+id/radioButton4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@color/white"
                 android:text="Weight-Lifting" />
 
-            <EditText
-                android:id="@+id/editTextText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:ems="10"
-                android:hint="Other Workouts"
-                android:inputType="text" />
         </RadioGroup>
 
         <Button
@@ -74,7 +67,8 @@
             android:layout_marginTop="59dp"
             android:layout_marginEnd="160dp"
             android:layout_marginBottom="115dp"
-            android:text="Button"
+            android:text="Submit"
+            android:onClick="exerciseSelected"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
