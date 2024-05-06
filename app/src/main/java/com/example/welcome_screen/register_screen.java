@@ -11,19 +11,32 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class register_screen extends Activity{
     private FirebaseAuth mAuth;
+
+    FirebaseFirestore db;
     private static final String TAG = "EmailPassword";
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_screen);
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
         Intent intent = getIntent();
 
 
@@ -46,6 +59,10 @@ public class register_screen extends Activity{
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            if (user != null) {
+                                String userId = user.getUid();
+                                createFirestoreCollection(userId);
+                            }
                             Intent sendToHomeScreen = new Intent(register_screen.this, FragmentMain.class);
                             startActivity(sendToHomeScreen);
 
@@ -66,7 +83,33 @@ public class register_screen extends Activity{
 
     }
 
+    private void createFirestoreCollection(String userId) {
+        // Accessing the Firestore "users" collection
+        CollectionReference usersCollectionRef = db.collection("users");
 
+        // Create a document with user ID as the document name
+        DocumentReference userDocRef = usersCollectionRef.document(userId);
+
+        // Define data to be stored in the document (you can add more fields as needed)
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("email", mAuth.getCurrentUser().getEmail());
+        userData.put("otherField", "otherValue"); // Example additional field
+
+        // Set the data in the document with the provided options
+        userDocRef.set(userData, SetOptions.merge())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "User document added with ID: " + userId);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+                    }
+                });
+    }
 
 
 }
