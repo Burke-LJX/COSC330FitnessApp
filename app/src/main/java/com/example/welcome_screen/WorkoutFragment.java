@@ -51,11 +51,13 @@ public class WorkoutFragment extends Fragment {
     }
     public void aerobicExercise() {
         Intent sendToAerobic = new Intent(requireContext(), AerobicExercise.class);
+        sendToAerobic.putExtra("exerciseType", "Aerobic");
         startActivity(sendToAerobic);
     }
 
     public void nonAerobicExercise() {
         Intent sendToNonAerobic = new Intent(requireContext(), nonAerobicExercise.class);
+        sendToNonAerobic.putExtra("exerciseType", "Non-Aerobic");
         startActivity(sendToNonAerobic);
     }
 
