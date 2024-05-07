@@ -93,7 +93,7 @@ public class register_screen extends Activity{
         // Define data to be stored in the document (you can add more fields as needed)
         Map<String, Object> userData = new HashMap<>();
         userData.put("email", mAuth.getCurrentUser().getEmail());
-        userData.put("admin", "false"); // Example additional field
+        userData.put("admin", false); // Example additional field
 
         // Set the data in the document with the provided options
         userDocRef.set(userData, SetOptions.merge())
