@@ -30,5 +30,13 @@
         android:text="displays data of date clicked"
          />
 
+    <TextView
+        android:id="@+id/workoutTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/calendarView"
+        android:layout_centerHorizontal="true"
+         />
+
 
 </RelativeLayout>

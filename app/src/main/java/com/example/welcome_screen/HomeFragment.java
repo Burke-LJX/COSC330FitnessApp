@@ -13,6 +13,12 @@ import android.widget.CalendarView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Calendar;
 
@@ -35,6 +41,8 @@ public class HomeFragment extends Fragment {
 
     private CalendarView calendarView;
     private TextView displayDate;
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -76,6 +84,9 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
 
         // Call changeDate to set up CalendarView and TextView
         changeDate(rootView);
@@ -91,9 +102,35 @@ public class HomeFragment extends Fragment {
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                String todaysDate = month + "/" + dayOfMonth + "/" + year;
-                Log.d("Date", todaysDate);
-                displayDate.setText(todaysDate);
+                String selectedDate = month + "/" + dayOfMonth + "/" + year;
+                displayDate.setText(selectedDate);
+
+                // Get the current user's ID
+                FirebaseUser currentUser = mAuth.getCurrentUser();
+                if (currentUser != null) {
+                    String userId = currentUser.getUid();
+                    // Query Firestore for workouts on the selected date
+                    DocumentReference userDocRef = db.collection("users").document(userId);
+                    CollectionReference workoutsCollectionRef = userDocRef.collection("workouts");
+
+                    // Assuming you have a field 'date' in your workout documents
+                    workoutsCollectionRef.whereEqualTo("date", selectedDate)
+                            .get()
+                            .addOnSuccessListener(queryDocumentSnapshots -> {
+                                for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                                    // Here you can access workout data for the selected date
+                                    String exerciseType = document.getString("exerciseType");
+                                    String reps = document.getString("reps");
+                                    TextView workoutTextView = view.findViewById(R.id.workoutTextView);
+                                    String workoutText = "Exercise Type: " + exerciseType + "\nReps: " + reps;
+                                    workoutTextView.setText(workoutText);
+                                }
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle errors
+                                Log.e("HomeFragment", "Error getting documents: " + e.getMessage());
+                            });
+                }
             }
         });
     }
