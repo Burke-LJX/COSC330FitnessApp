@@ -53,10 +53,8 @@ public class nonAerobicExercise extends Activity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             String userId = currentUser.getUid();
-
             // Access the Firestore "users" collection
             DocumentReference userDocRef = db.collection("users").document(userId);
-
             // Access the subcollection "workouts" under the user's document
             CollectionReference workoutsCollectionRef = userDocRef.collection("workouts");
 

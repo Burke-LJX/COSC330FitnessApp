@@ -2,13 +2,19 @@ package com.example.welcome_screen;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
+import android.widget.TextView;
+
 import com.github.mikephil.charting.charts.LineChart;
 
+import java.util.Calendar;
 
 
 /**
@@ -26,7 +32,9 @@ public class HomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private LineChart lineChart;
+
+    private CalendarView calendarView;
+    private TextView displayDate;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -43,6 +51,7 @@ public class HomeFragment extends Fragment {
     // TODO: Rename and change types and number of parameters
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
+
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -53,20 +62,39 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //inflate the layout from fragment_home.xml
+        // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
-        // Find the LineChart view by its ID
-        lineChart = rootView.findViewById(R.id.line_chart);
+        // Call changeDate to set up CalendarView and TextView
+        changeDate(rootView);
+
         return rootView;
+    }
+
+
+    public void changeDate(View view){
+        calendarView = (CalendarView) view.findViewById(R.id.calendarView);
+        displayDate = (TextView) view.findViewById(R.id.displayDate);
+
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                String todaysDate = month + "/" + dayOfMonth + "/" + year;
+                Log.d("Date", todaysDate);
+                displayDate.setText(todaysDate);
+            }
+        });
     }
 }
