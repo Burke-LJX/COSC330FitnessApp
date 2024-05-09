@@ -14,6 +14,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,6 +52,9 @@ public class AerobicExercise extends Activity {
         String time = editTextTime.getText().toString();
         String distance = editTextDistance.getText().toString();
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        String currentDate = dateFormat.format(new Date());
+
         // Get the current user's ID
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
@@ -66,6 +71,7 @@ public class AerobicExercise extends Activity {
             exerciseData.put("exerciseType", exerciseType);
             exerciseData.put("time", time);
             exerciseData.put("distance", distance);
+            exerciseData.put("date", currentDate);
 
             // Add the exercise data as a document in the "workouts" subcollection
             workoutsCollectionRef.add(exerciseData)
