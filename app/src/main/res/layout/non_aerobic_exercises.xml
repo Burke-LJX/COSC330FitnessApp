@@ -64,6 +64,7 @@
         android:layout_marginTop="16dp"
         android:onClick="goToWorkoutFragment"
         android:src="@drawable/yellowarrow"
+        android:backgroundTint="#232323"
         app:layout_constraintEnd_toStartOf="@+id/textView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

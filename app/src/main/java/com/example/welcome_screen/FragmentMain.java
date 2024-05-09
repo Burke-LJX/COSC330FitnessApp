@@ -68,5 +68,10 @@ public class FragmentMain extends AppCompatActivity {
             ((WorkoutFragment) fragment).exerciseSelected(view);
         }
     }
+
+
+
+
+
 }
 
