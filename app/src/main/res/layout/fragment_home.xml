@@ -24,9 +24,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@id/calendarView"
+        android:paddingTop="25dp"
+        android:textSize= "28sp"
+        android:textColor="@color/purple"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/white"
         android:text="displays data of date clicked"
          />
 
@@ -34,6 +36,8 @@
         android:id="@+id/workoutTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/purple"
+        android:textSize= "28sp"
         android:layout_below="@+id/calendarView"
         android:layout_centerHorizontal="true"
          />

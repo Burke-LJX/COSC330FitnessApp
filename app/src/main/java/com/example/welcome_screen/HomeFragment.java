@@ -20,7 +20,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 
 /**
@@ -98,11 +101,15 @@ public class HomeFragment extends Fragment {
     public void changeDate(View view){
         calendarView = (CalendarView) view.findViewById(R.id.calendarView);
         displayDate = (TextView) view.findViewById(R.id.displayDate);
-
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        String currentDate = dateFormat.format(new Date());
+        displayDate.setText(currentDate);
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                String selectedDate = month + "/" + dayOfMonth + "/" + year;
+            public void onSelectedDayChange(@NonNull CalendarView caview, int year, int month, int dayOfMonth) {
+
+                String selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+
                 displayDate.setText(selectedDate);
 
                 // Get the current user's ID
@@ -114,7 +121,7 @@ public class HomeFragment extends Fragment {
                     CollectionReference workoutsCollectionRef = userDocRef.collection("workouts");
 
                     // Assuming you have a field 'date' in your workout documents
-                    workoutsCollectionRef.whereEqualTo("date", selectedDate)
+                    workoutsCollectionRef.whereEqualTo("date", currentDate)
                             .get()
                             .addOnSuccessListener(queryDocumentSnapshots -> {
                                 for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
@@ -129,6 +136,8 @@ public class HomeFragment extends Fragment {
                             .addOnFailureListener(e -> {
                                 // Handle errors
                                 Log.e("HomeFragment", "Error getting documents: " + e.getMessage());
+                                TextView workoutTextView = view.findViewById(R.id.workoutTextView);
+                                workoutTextView.setText("No workouts found for the selected date.");
                             });
                 }
             }
