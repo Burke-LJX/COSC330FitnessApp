@@ -34,14 +34,12 @@ public class FragmentMain extends AppCompatActivity {
             int itemId = item.getItemId();
             final int homeId = R.id.home;
             final int profileId = R.id.workout;
-            final int settingsId = R.id.settings;
             final int notificationsId = R.id.notification;
             if (itemId == homeId) {
                 replaceFragment(new HomeFragment());
             } else if (itemId == profileId) {
                 replaceFragment(new WorkoutFragment());
-            } else if (itemId == settingsId)
-                replaceFragment(new SettingsFragment());
+            }
             else
                 replaceFragment(new NotificationsFragment());
 

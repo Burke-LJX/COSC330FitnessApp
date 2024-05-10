@@ -108,7 +108,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView caview, int year, int month, int dayOfMonth) {
 
-                String selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+                // Format the selected date into mm/dd/yyyy format
+                String selectedDate = String.format("%02d/%02d/%04d", month + 1, dayOfMonth, year);
 
                 displayDate.setText(selectedDate);
 
@@ -120,27 +121,53 @@ public class HomeFragment extends Fragment {
                     DocumentReference userDocRef = db.collection("users").document(userId);
                     CollectionReference workoutsCollectionRef = userDocRef.collection("workouts");
 
-                    // Assuming you have a field 'date' in your workout documents
-                    workoutsCollectionRef.whereEqualTo("date", currentDate)
+                    // checks the collection for matching date
+                    workoutsCollectionRef.whereEqualTo("date", selectedDate)
                             .get()
                             .addOnSuccessListener(queryDocumentSnapshots -> {
+                                StringBuilder workoutText = new StringBuilder();
                                 for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
                                     // Here you can access workout data for the selected date
                                     String exerciseType = document.getString("exerciseType");
-                                    String reps = document.getString("reps");
-                                    TextView workoutTextView = view.findViewById(R.id.workoutTextView);
-                                    String workoutText = "Exercise Type: " + exerciseType + "\nReps: " + reps;
-                                    workoutTextView.setText(workoutText);
+
+                                    // Check if the exercise type is aerobic or non-aerobic
+                                    if (exerciseType.equals("Aerobic")) {
+                                        // Append data for aerobic workouts
+                                        workoutText.append("Aerobic Exercise\n");
+                                        // gets the duration of exercise and distance from document
+                                        String aerobicData = document.getString("distance");
+                                        String duration = document.getString("time");
+                                        workoutText.append("Distance: ").append(aerobicData).append('\n');
+                                        workoutText.append("Duration: ").append(duration).append("\n\n");
+
+                                    } else {
+                                        // Append data for non-aerobic workouts
+                                        workoutText.append("Non-aerobic Exercise\n");
+                                        // gets the reps from document
+                                        String reps = document.getString("reps");
+                                        workoutText.append("Reps: ").append(reps).append("\n\n");
+                                    }
+
                                 }
+                                //this means that there is no matching date in collection
+                                if (workoutText.length() == 0) {
+                                    workoutText.append("No workouts found for the selected date.");
+                                }
+                                //changes the text that will be displayed on screen
+                                TextView workoutTextView = view.findViewById(R.id.workoutTextView);
+                                workoutTextView.setText(workoutText.toString());
                             })
                             .addOnFailureListener(e -> {
                                 // Handle errors
                                 Log.e("HomeFragment", "Error getting documents: " + e.getMessage());
                                 TextView workoutTextView = view.findViewById(R.id.workoutTextView);
-                                workoutTextView.setText("No workouts found for the selected date.");
+                                workoutTextView.setText("Error: " + e.getMessage());
                             });
                 }
             }
+
+
+
         });
     }
 }
