@@ -36,13 +36,13 @@
         android:text="Notifications"
         android:textColor="@color/green"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/listView"
+        app:layout_constraintBottom_toTopOf="@+id/lvItems"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
-        android:id="@+id/listView"
+        android:id="@+id/lvItems"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="1dp"

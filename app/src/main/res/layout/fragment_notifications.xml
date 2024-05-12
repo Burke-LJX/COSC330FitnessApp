@@ -25,7 +25,10 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:backgroundTint="@color/light_purple"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:textStyle="bold"
         android:layout_below="@+id/displayNotification"
         android:layout_marginTop="-45dp" />
 

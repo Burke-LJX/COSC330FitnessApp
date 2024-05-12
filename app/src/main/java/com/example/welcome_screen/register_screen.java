@@ -22,6 +22,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +30,8 @@ import java.util.Map;
 public class register_screen extends Activity{
     private FirebaseAuth mAuth;
 
-    FirebaseFirestore db;
+    private MyFirebaseMessagingService test;
+    private FirebaseFirestore db;
     private static final String TAG = "EmailPassword";
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +63,19 @@ public class register_screen extends Activity{
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user != null) {
                                 String userId = user.getUid();
-                                createFirestoreCollection(userId);
+                                // Get FCM token
+                                FirebaseMessaging.getInstance().getToken()
+                                        .addOnCompleteListener(new OnCompleteListener<String>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<String> task) {
+                                                if (task.isSuccessful() && task.getResult() != null) {
+                                                    String fcmToken = task.getResult();
+                                                    createFirestoreCollection(userId, fcmToken);
+                                                } else {
+                                                    Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                                                }
+                                            }
+                                        });
                             }
                             Intent sendToHomeScreen = new Intent(register_screen.this, FragmentMain.class);
                             startActivity(sendToHomeScreen);
@@ -83,7 +97,7 @@ public class register_screen extends Activity{
 
     }
 
-    private void createFirestoreCollection(String userId) {
+    private void createFirestoreCollection(String userId, String token) {
         // Accessing the Firestore "users" collection
         CollectionReference usersCollectionRef = db.collection("users");
 
@@ -93,6 +107,7 @@ public class register_screen extends Activity{
         // Define data to be stored in the document (you can add more fields as needed)
         Map<String, Object> userData = new HashMap<>();
         userData.put("email", mAuth.getCurrentUser().getEmail());
+        userData.put("token", token);
         userData.put("admin", false); // Example additional field
 
         // Set the data in the document with the provided options

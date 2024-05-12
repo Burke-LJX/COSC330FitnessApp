@@ -37,6 +37,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
 }
 
 
@@ -59,9 +60,14 @@ dependencies {
 
     // Add the dependency for the Firebase SDK for Google Analytics
     implementation("com.google.firebase:firebase-messaging")
+
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-database")
     implementation("com.google.firebase:firebase-storage")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation ("com.squareup.retrofit2:retrofit:2.11.0")
+    // https://mvnrepository.com/artifact/androidx.compose.runtime/runtime
+    runtimeOnly("androidx.compose.runtime:runtime:1.6.7")
+
 }
