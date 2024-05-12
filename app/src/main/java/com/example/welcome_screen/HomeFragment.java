@@ -43,6 +43,9 @@ public class HomeFragment extends Fragment {
     private String mParam2;
 
     private CalendarView calendarView;
+    int totalReps = 0;
+    long totalDurationInMinutes = 0;
+    int workoutCount = 0;
     private TextView displayDate;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
@@ -98,67 +101,79 @@ public class HomeFragment extends Fragment {
     }
 
 
-    public void changeDate(View view){
-        calendarView = (CalendarView) view.findViewById(R.id.calendarView);
-        displayDate = (TextView) view.findViewById(R.id.displayDate);
+    public void changeDate(View view) {
+        calendarView = view.findViewById(R.id.calendarView);
+        displayDate = view.findViewById(R.id.displayDate);
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         String currentDate = dateFormat.format(new Date());
         displayDate.setText(currentDate);
+
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView caview, int year, int month, int dayOfMonth) {
+                totalReps = 0;
+                totalDurationInMinutes = 0;
+                workoutCount = 0;
 
-                // Format the selected date into mm/dd/yyyy format
                 String selectedDate = String.format("%02d/%02d/%04d", month + 1, dayOfMonth, year);
-
                 displayDate.setText(selectedDate);
 
-                // Get the current user's ID
                 FirebaseUser currentUser = mAuth.getCurrentUser();
                 if (currentUser != null) {
                     String userId = currentUser.getUid();
-                    // Query Firestore for workouts on the selected date
                     DocumentReference userDocRef = db.collection("users").document(userId);
                     CollectionReference workoutsCollectionRef = userDocRef.collection("workouts");
 
-                    // checks the collection for matching date
-                    workoutsCollectionRef.whereEqualTo("date", selectedDate)
+                    // Define the start and end dates of the selected week
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(Calendar.YEAR, year);
+                    calendar.set(Calendar.MONTH, month);
+                    calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+                    calendar.add(Calendar.DAY_OF_MONTH, Calendar.SUNDAY - dayOfWeek);
+                    Date startDate = calendar.getTime();
+                    calendar.add(Calendar.DAY_OF_MONTH, 6);
+                    Date endDate = calendar.getTime();
+
+                    workoutsCollectionRef.whereGreaterThanOrEqualTo("date", dateFormat.format(startDate))
+                            .whereLessThanOrEqualTo("date", dateFormat.format(endDate))
                             .get()
                             .addOnSuccessListener(queryDocumentSnapshots -> {
                                 StringBuilder workoutText = new StringBuilder();
                                 for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                                    // Here you can access workout data for the selected date
                                     String exerciseType = document.getString("exerciseType");
-
-                                    // Check if the exercise type is aerobic or non-aerobic
+                                    String workoutDate = document.getString("date"); // Get workout date
+                                    workoutText.append("Workout Date: ").append(workoutDate).append("\n"); // Append workout date
+                                    workoutText.append("Workout Type: ").append(exerciseType).append("\n");
                                     if (exerciseType.equals("Aerobic")) {
-                                        // Append data for aerobic workouts
-                                        workoutText.append("Aerobic Exercise\n");
-                                        // gets the duration of exercise and distance from document
                                         String aerobicData = document.getString("distance");
                                         String duration = document.getString("time");
                                         workoutText.append("Distance: ").append(aerobicData).append('\n');
                                         workoutText.append("Duration: ").append(duration).append("\n\n");
-
+                                        if (duration != null) {
+                                            String[] durationParts = duration.split(":");
+                                            int minutes = Integer.parseInt(durationParts[0]);
+                                            int seconds = Integer.parseInt(durationParts[1]);
+                                            totalDurationInMinutes += minutes + (seconds / 60.0); // Convert seconds to minutes
+                                        }
                                     } else {
-                                        // Append data for non-aerobic workouts
-                                        workoutText.append("Non-aerobic Exercise\n");
-                                        // gets the reps from document
                                         String reps = document.getString("reps");
                                         workoutText.append("Reps: ").append(reps).append("\n\n");
+                                        totalReps += Integer.parseInt(reps);
                                     }
+                                    workoutCount++;
+                                }
 
-                                }
-                                //this means that there is no matching date in collection
-                                if (workoutText.length() == 0) {
-                                    workoutText.append("No workouts found for the selected date.");
-                                }
-                                //changes the text that will be displayed on screen
+                                double averageDuration = workoutCount > 0 ? totalDurationInMinutes / workoutCount : 0;
+                                double averageReps = workoutCount > 0 ? totalReps / (double) workoutCount : 0;
+
                                 TextView workoutTextView = view.findViewById(R.id.workoutTextView);
-                                workoutTextView.setText(workoutText.toString());
+                                workoutTextView.setText("Workouts for the Week of " + dateFormat.format(startDate) + " - " + dateFormat.format(endDate) + ":\n\n" +
+                                        workoutText.toString() +
+                                        "\nAverage Duration for the Week: " + averageDuration + " minutes\n" +
+                                        "Average Reps for the Week: " + averageReps);
                             })
                             .addOnFailureListener(e -> {
-                                // Handle errors
                                 Log.e("HomeFragment", "Error getting documents: " + e.getMessage());
                                 TextView workoutTextView = view.findViewById(R.id.workoutTextView);
                                 workoutTextView.setText("Error: " + e.getMessage());
@@ -166,8 +181,14 @@ public class HomeFragment extends Fragment {
                 }
             }
 
-
-
         });
     }
+
+
+
+
+
+
+
+
 }

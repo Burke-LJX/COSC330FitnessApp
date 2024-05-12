@@ -91,4 +91,8 @@ public class AerobicExercise extends Activity {
     private void goToWorkoutFragment() {
         finish();
     }
+
+    public void goToWorkoutFragment(View view) {
+        finish();
+    }
 }
