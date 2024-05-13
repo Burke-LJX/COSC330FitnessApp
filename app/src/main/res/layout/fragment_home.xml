@@ -32,6 +32,15 @@
         android:text="displays data of date clicked"
          />
 
+    <Button
+        android:id="@+id/adminButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/displayDate"
+        android:visibility="gone"
+        android:layout_marginTop="-76dp"
+        android:text="Admin Button" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -44,6 +53,8 @@
         android:textSize= "28sp"
          />
     </ScrollView>
+
+
 
 
 </RelativeLayout>

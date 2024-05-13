@@ -69,7 +69,7 @@ public class NotificationsFragment extends Fragment {
         View view = inflater.inflate(R.layout.notification_screen, container, false);
         lvItems = view.findViewById(R.id.lvItems);
         items = new ArrayList<>();
-        itemsAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, items);
+        itemsAdapter = new ArrayAdapter<>(getContext(), R.layout.row, items);
         lvItems.setAdapter(itemsAdapter);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();

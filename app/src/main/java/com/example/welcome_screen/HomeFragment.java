@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.TextView;
 
@@ -49,6 +50,8 @@ public class HomeFragment extends Fragment {
     private TextView displayDate;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
+
+    private boolean isAdmin = false;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -93,11 +96,35 @@ public class HomeFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-
+        checkAdminStatus();
         // Call changeDate to set up CalendarView and TextView
         changeDate(rootView);
 
         return rootView;
+    }
+
+    private void checkAdminStatus() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            DocumentReference userDocRef = db.collection("users").document(userId);
+            userDocRef.get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    isAdmin = documentSnapshot.getBoolean("admin");
+                    // Update UI based on admin status
+                    updateUI();
+                }
+            }).addOnFailureListener(e -> Log.e("HomeFragment", "Error checking admin status: " + e.getMessage()));
+        }
+    }
+
+    private void updateUI() {
+        Button adminButton = getView().findViewById(R.id.adminButton);
+        if (isAdmin) {
+            adminButton.setVisibility(View.VISIBLE);
+        } else {
+            adminButton.setVisibility(View.GONE);
+        }
     }
 
 
