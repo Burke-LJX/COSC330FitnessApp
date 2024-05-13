@@ -67,6 +67,11 @@ public class FragmentMain extends AppCompatActivity {
         }
     }
 
+    public void goToAdminScreen(View view) {
+        Intent sendToAdminScreen = new Intent(this, AdminUserHistory.class);
+        startActivity(sendToAdminScreen);
+    }
+
 
 
 

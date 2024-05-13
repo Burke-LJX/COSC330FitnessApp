@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#232323"
-    tools:context=".HomeFragment">
+    tools:context=".AdminUserHistory">
 
     <!-- TODO: Update blank fragment layout -->
 
 
 
     <CalendarView
-        android:id="@+id/calendarView"
+        android:id="@+id/calendarView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/white"
@@ -20,39 +20,39 @@
         />
 
     <TextView
-        android:id="@+id/displayDate"
+        android:id="@+id/displayDate2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/calendarView"
+        android:layout_above="@id/calendarView2"
         android:paddingTop="25dp"
         android:textSize= "28sp"
         android:textColor="@color/purple"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:text="displays data of date clicked"
-         />
+        />
 
     <Button
-        android:id="@+id/adminButton"
+        android:id="@+id/returnToUserButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/displayDate"
-        android:visibility="gone"
-        android:onClick="goToAdminScreen"
+        android:layout_below="@id/displayDate2"
+        android:onClick="goBackToUserView"
+        android:visibility="visible"
         android:layout_marginTop="-76dp"
-        android:text="Admin Button" />
+        android:text="Return to user" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/calendarView">
-    <TextView
-        android:id="@+id/workoutTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/purple"
-        android:textSize= "28sp"
-         />
+        android:layout_below="@+id/calendarView2">
+        <TextView
+            android:id="@+id/workoutAllUsersTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/purple"
+            android:textSize= "28sp"
+            />
     </ScrollView>
 
 
