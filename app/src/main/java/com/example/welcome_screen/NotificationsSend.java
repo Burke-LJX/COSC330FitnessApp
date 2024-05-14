@@ -55,7 +55,7 @@ public class NotificationsSend extends AppCompatActivity {
 
         // Retrofit setup
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://172.17.74.31:3000")
+                .baseUrl("http://100.115.92.206:3000")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

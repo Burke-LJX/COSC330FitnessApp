@@ -97,10 +97,10 @@ public class login extends Activity {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
                                 // User document exists, check if token is already added
-                                if (!document.contains("token")) {
+
                                     // Token does not exist, add it
                                     addTokenToDatabase(userId, token);
-                                }
+
                             } else {
                                 // User document does not exist, create it and add token
                                 addTokenToDatabase(userId, token);
