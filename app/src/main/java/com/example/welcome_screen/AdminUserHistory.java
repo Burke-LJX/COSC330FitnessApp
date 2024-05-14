@@ -23,6 +23,9 @@ public class AdminUserHistory extends Activity {
     private TextView displayDate;
     private TextView workoutAllUsersTextView;
     private FirebaseFirestore db;
+    int totalWorkoutCount = 0;
+    long totalDurationInMinutes = 0;
+    int totalReps = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,11 @@ public class AdminUserHistory extends Activity {
     private void retrieveWorkoutsForWeek(String startDate, String endDate) {
         CollectionReference usersCollectionRef = db.collection("users");
 
+        // Variables to store total workout count and durations/reps
+        totalWorkoutCount = 0;
+        totalDurationInMinutes = 0;
+        totalReps = 0;
+
         // Retrieve all users
         usersCollectionRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
                     StringBuilder workoutsText = new StringBuilder();
@@ -84,25 +92,41 @@ public class AdminUserHistory extends Activity {
                                         // Extract workout details
                                         String exerciseType = workoutDoc.getString("exerciseType");
                                         String workoutDate = workoutDoc.getString("date");
-                                        String distance = workoutDoc.getString("distance");
                                         String duration = workoutDoc.getString("time");
                                         String reps = workoutDoc.getString("reps");
 
-                                        // Append workout details to the StringBuilder
+                                        // Append individual workout details to workoutsText
                                         workoutsText.append("User Email: ").append(userEmail).append("\n");
                                         workoutsText.append("Workout Date: ").append(workoutDate).append("\n");
                                         workoutsText.append("Exercise Type: ").append(exerciseType).append("\n");
                                         if (exerciseType.equals("Aerobic")) {
-                                            workoutsText.append("Distance: ").append(distance).append('\n');
+                                            workoutsText.append("Distance: ").append(workoutDoc.getString("distance")).append('\n');
                                             workoutsText.append("Duration: ").append(duration).append("\n\n");
+                                            if (duration != null) {
+                                                String[] durationParts = duration.split(":");
+                                                int minutes = Integer.parseInt(durationParts[0]);
+                                                int seconds = Integer.parseInt(durationParts[1]);
+                                                totalDurationInMinutes += minutes + (seconds / 60); // Convert seconds to minutes
+                                            }
                                         } else {
                                             workoutsText.append("Reps: ").append(reps).append("\n\n");
+                                            if (reps != null) {
+                                                totalReps += Integer.parseInt(reps);
+                                            }
                                         }
+                                        // Increment total workout count
+                                        totalWorkoutCount++;
                                     }
 
                                     // Update the TextView with workouts for the selected week
                                     workoutAllUsersTextView.setText("Workouts for the Week of " + startDate + " - " + endDate + ":\n\n" +
                                             workoutsText.toString());
+
+                                    // Update the TextView with averages
+                                    double averageDuration = totalDurationInMinutes / (double) totalWorkoutCount;
+                                    double averageReps = totalReps / (double) totalWorkoutCount;
+                                    workoutAllUsersTextView.append("Average Duration: " + averageDuration + " minutes\n");
+                                    workoutAllUsersTextView.append("Average Reps: " + averageReps);
                                 })
                                 .addOnFailureListener(e -> {
                                     // Handle failure
