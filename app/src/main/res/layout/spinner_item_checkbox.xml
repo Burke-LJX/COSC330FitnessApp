@@ -3,18 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:gravity="center_vertical">
+    android:padding="8dp">
 
     <CheckBox
-        android:id="@+id/checkBox"
+        android:id="@+id/checkbox"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical" />
 
     <TextView
-        android:id="@+id/textView"
-        style="?android:attr/spinnerDropDownItemStyle"
-        android:singleLine="true"
-        android:layout_width="match_parent"
+        android:id="@+id/text1"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/green" />
+        android:layout_gravity="center_vertical"
+        android:paddingStart="8dp"
+        android:textSize="16sp" />
 </LinearLayout>
