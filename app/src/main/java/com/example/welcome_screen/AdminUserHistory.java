@@ -120,4 +120,9 @@ public class AdminUserHistory extends Activity {
         Intent sendToFragmentMain = new Intent(this, FragmentMain.class);
         startActivity(sendToFragmentMain);
     }
+
+    public void goToNotifs(View view) {
+        Intent sendToFragmentMain = new Intent(this, NotificationsSend.class);
+        startActivity(sendToFragmentMain);
+    }
 }

@@ -26,6 +26,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 
 /**
@@ -120,7 +121,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void updateUI() {
-        Button adminButton = getView().findViewById(R.id.adminButton);
+        Button adminButton = requireView().findViewById(R.id.adminButton);
         if (isAdmin) {
             adminButton.setVisibility(View.VISIBLE);
         } else {

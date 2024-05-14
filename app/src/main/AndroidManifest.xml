@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -16,6 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Welcome_Screen"
         tools:targetApi="31">
+        <activity
+            android:name=".NotificationsSend"
+            android:exported="false"
+            android:theme="@style/Theme.Welcome_Screen" />
         <activity
             android:name=".WelcomeScreen"
             android:exported="true">
@@ -31,8 +35,9 @@
             android:parentActivityName=".WelcomeScreen">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".WelcomeScreen"/>
+                android:value=".WelcomeScreen" />
         </activity>
+
         <service
             android:name=".MyFirebaseMessagingService"
             android:exported="false">
@@ -47,25 +52,19 @@
             android:parentActivityName=".WelcomeScreen">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".WelcomeScreen"/>
+                android:value=".WelcomeScreen" />
         </activity>
-
         <activity
             android:name=".FragmentMain"
             android:label="@string/app_name"
             android:parentActivityName=".login">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".WelcomeScreen"/>
+                android:value=".WelcomeScreen" />
         </activity>
-
         <activity android:name=".nonAerobicExercise" />
-
         <activity android:name=".AerobicExercise" />
-        <activity android:name=".AdminUserHistory"/>
-
-
-
+        <activity android:name=".AdminUserHistory" />
 
         <meta-data
             android:name="preloaded_fonts"
